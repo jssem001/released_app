@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Import all page components
 import Layout from './Layout';
-// import Onboarding from '../pages/Onboarding';
 import Onboarding from '../pages/Onboarding';
 import EmailLogin from '../pages/EmailLogin';
 import Scanning from '../pages/Scanning';
