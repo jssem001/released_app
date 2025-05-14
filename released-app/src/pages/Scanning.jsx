@@ -42,8 +42,9 @@ export default function Scanning() {
           setFound(subscriptions);
           // small delay so progress bar hits 100%
           await new Promise(r => setTimeout(r, 500));
-          console.log('✅ scan complete, navigating to dashboard');
-          toDashboard({ subscriptions });
+          console.log('✅ scan complete');
+          console.log('🔔 FINAL SUBSCRIPTIONS:', subscriptions);
+          toDashboard(subscriptions);
         }
 
       } catch (err) {
@@ -55,58 +56,9 @@ export default function Scanning() {
       console.log('❎ scanInbox effect cleanup');
       isMounted = false;
     };
-    // <-- empty deps ensures one-time run:
+    
   }, []);
   
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   const MAX_TOTAL_MESSAGES = 100;
-
-  //   async function scanInbox() {
-  //     try {
-  //       const { messages = [] } = await listInboxMessages(['INBOX'], MAX_TOTAL_MESSAGES);
-  //       const total = Math.min(messages.length, MAX_TOTAL_MESSAGES);
-  //       const subscriptions = [];
-
-  //       for (let i = 0; i < total; i++) {
-  //         const { id } = messages[i];
-
-  //         try {
-  //           const detail = await getMessageDetail(id);
-  //           const link = extractUnsubscribeLink(detail);
-
-  //           if (link) {
-  //             const sub = {
-  //               id,
-  //               from: detail.payload.headers.find(h => h.name === 'From')?.value,
-  //               subject: detail.payload.headers.find(h => h.name === 'Subject')?.value,
-  //               unsubscribeLink: link,
-  //             };
-  //             subscriptions.push(sub);
-  //           }
-  //         } catch (err) {
-  //           console.warn(`Skipping message ${id}:`, err.message);
-  //         }
-
-  //         if (isMounted) {
-  //           setProgress(Math.round(((i + 1) / total) * 100));
-  //         }
-  //       }
-
-  //       if (isMounted) {
-  //         setFound(subscriptions);
-  //         await new Promise(res => setTimeout(res, 500)); // final delay
-  //         handleDone(subscriptions);
-  //       }
-
-  //     } catch (err) {
-  //       console.error('Scan error:', err);
-  //     }
-  //   }
-
-  //   scanInbox();
-  //   return () => { isMounted = false; };
-  // }, [handleDone]);
 
   return (
     <div className="h-100 d-flex flex-column align-items-center justify-content-center bg-white p-4">

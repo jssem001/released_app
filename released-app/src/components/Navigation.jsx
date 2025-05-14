@@ -9,8 +9,12 @@ export function useAppNavigation() {
     toOnboarding: () => navigate('/'),
     toEmailLogin: () => navigate('/email-login'),
     toScanning: () => navigate('/scanning'),
-    toDashboard: () => navigate('/dashboard'),
-    toCategoryView: () => navigate('/category-view'),
+    // toDashboard: () => navigate('/dashboard'),
+    // toCategoryView: () => navigate('/category-view'),
+    toDashboard:  (subscriptions = []) =>
+      navigate('/dashboard', { state: subscriptions }),
+    toCategoryView: (subscriptions = []) =>
+      navigate('/category-view', { state: subscriptions }),
     toUnsubscribeProcess: () => navigate('/unsubscribe-process')
   };
 }
