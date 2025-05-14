@@ -9,18 +9,15 @@ export default function Scanning() {
   const [found, setFound] = useState([]);
   const { toDashboard } = useAppNavigation();
 
-useEffect(() => {
+  useEffect(() => {
     let isMounted = true;
     const MAX_TOTAL_MESSAGES = 100;
 
     async function scanInbox() {
       try {
-        // Step 1: Fetch up to 100 messages
         const { messages = [] } = await listInboxMessages(['INBOX'], MAX_TOTAL_MESSAGES);
-
         const subscriptions = [];
 
-        // Step 2: Scan each message
         for (let i = 0; i < messages.length; i++) {
           const { id } = messages[i];
 
@@ -37,7 +34,6 @@ useEffect(() => {
               };
 
               subscriptions.push(sub);
-
               if (isMounted) {
                 setFound(prev => [...prev, sub]);
               }
@@ -51,7 +47,6 @@ useEffect(() => {
           }
         }
 
-        // Optional: small delay to let UI catch up
         await new Promise(res => setTimeout(res, 500));
 
         if (isMounted) {
@@ -60,41 +55,46 @@ useEffect(() => {
 
       } catch (err) {
         console.error('Scan error:', err);
-        // TODO: show user-facing error or retry option
       }
     }
 
     scanInbox();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [toDashboard]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-white p-6">
-      <div className="mb-8">
-        <div className="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-          <RefreshCw size={32} className="text-blue-600 animate-spin" />
+    <div className="h-100 d-flex flex-column align-items-center justify-content-center bg-white p-4">
+      <div className="mb-5 text-center">
+        <div className="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-4" style={{ width: '64px', height: '64px' }}>
+          <RefreshCw size={32} className="text-primary spinner-border spinner-border-sm" />
         </div>
-        <h2 className="text-xl font-semibold text-center text-gray-800">Scanning your inbox</h2>
-        <p className="text-sm text-center text-gray-600 mt-2">Identifying your subscriptions...</p>
+        <h2 className="fs-5 fw-semibold text-dark">Scanning your inbox</h2>
+        <p className="text-muted small mt-2">Identifying your subscriptions...</p>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
+      <div className="w-100 mb-2">
+        <div className="progress" style={{ height: '8px' }}>
+          <div
+            className="progress-bar bg-primary"
+            role="progressbar"
+            style={{ width: `${progress}%` }}
+            aria-valuenow={progress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+        <p className="small text-muted mt-1">{progress}% complete</p>
       </div>
-      <p className="text-xs text-gray-500">{progress}% complete</p>
 
-      <div className="mt-8 w-full overflow-y-auto max-h-48">
+      <div className="mt-4 w-100 overflow-auto" style={{ maxHeight: '12rem' }}>
         {found.map((sub) => (
-          <div key={sub.id} className="flex items-center mb-3 pb-3 border-b border-gray-100">
-            <div className="w-8 h-8 bg-gray-200 rounded-full mr-3 flex items-center justify-center">
-              <span className="text-xs font-semibold">{sub.from?.[0] || '?'}</span>
+          <div key={sub.id} className="d-flex align-items-center border-bottom border-light-subtle pb-2 mb-2">
+            <div className="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style={{ width: '32px', height: '32px' }}>
+              <span className="text-muted small fw-bold">{sub.from?.[0] || '?'}</span>
             </div>
-            <div>
-              <p className="text-sm font-medium truncate">{sub.subject}</p>
-              <p className="text-xs text-gray-500 truncate">Subscription found</p>
+            <div className="flex-grow-1">
+              <p className="mb-0 fw-semibold text-truncate">{sub.subject}</p>
+              <p className="mb-0 text-muted small">Subscription found</p>
             </div>
           </div>
         ))}
@@ -102,4 +102,3 @@ useEffect(() => {
     </div>
   );
 }
-

@@ -3,65 +3,70 @@ import { useAppNavigation } from '../components/Navigation';
 import { ArrowRight, Check } from 'lucide-react';
 
 export default function CategoryView() {
-  const { toDashboard } = useAppNavigation();
-  const {toUnsubscribeProcess} =useAppNavigation();
-
+  const { toDashboard, toUnsubscribeProcess } = useAppNavigation();
   const [selected, setSelected] = useState([]);
-  
+
   const toggleSelect = (index) => {
-    if (selected.includes(index)) {
-      setSelected(selected.filter(i => i !== index));
-    } else {
-      setSelected([...selected, index]);
-    }
+    setSelected(prev =>
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    );
   };
-  
+
   return (
-    <div className="h-full flex flex-col bg-white">
-      <div className="p-4 bg-red-50 border-b border-red-100">
-        <div className="flex items-center mb-2">
-          <button onClick={toDashboard} className="mr-2">
-            <ArrowRight size={20} className="transform rotate-180 text-gray-600" />
+    <div className="h-100 d-flex flex-column bg-white">
+      <div className="p-3 bg-danger bg-opacity-10 border-bottom border-danger-subtle">
+        <div className="d-flex align-items-center mb-2">
+          <button onClick={toDashboard} className="btn btn-sm btn-light me-2">
+            <ArrowRight size={20} style={{ transform: 'rotate(180deg)' }} className="text-secondary" />
           </button>
-          <h1 className="text-lg font-bold">Shopping & Retail</h1>
+          <h1 className="fs-6 fw-bold mb-0">Shopping & Retail</h1>
         </div>
-        <p className="text-sm text-gray-600">48 subscriptions</p>
+        <p className="small text-muted mb-0">48 subscriptions</p>
       </div>
-      
-      <div className="p-4 flex-1 overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-600">{selected.length} selected</p>
-          <div className="flex gap-2">
-            <button className="text-xs bg-gray-200 px-3 py-1 rounded-full">Sort</button>
-            <button className="text-xs bg-gray-200 px-3 py-1 rounded-full">Filter</button>
+
+      <div className="p-3 flex-grow-1 overflow-auto">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <p className="small text-muted mb-0">{selected.length} selected</p>
+          <div className="d-flex gap-2">
+            <button className="btn btn-sm btn-light text-muted">Sort</button>
+            <button className="btn btn-sm btn-light text-muted">Filter</button>
           </div>
         </div>
-        
-        {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
-          <div key={index} className="flex items-center p-3 border-b border-gray-100">
-            <div 
-              onClick={() => toggleSelect(index)}
-              className={`w-6 h-6 flex items-center justify-center rounded-full mr-3 ${selected.includes(index) ? 'bg-blue-600' : 'border border-gray-300'}`}
-            >
-              {selected.includes(index) && <Check size={14} className="text-white" />}
-            </div>
-            <div className="flex-1 flex items-center">
-              <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
-              <div>
-                <p className="font-medium">{["Amazon", "Target", "Walmart", "Best Buy", "Macy's", "Gap", "H&M"][index]}</p>
-                <p className="text-xs text-gray-500">Last email: 3 days ago</p>
+
+        {[1, 2, 3, 4, 5, 6, 7].map((item, index) => {
+          const isSelected = selected.includes(index);
+          const brand = ["Amazon", "Target", "Walmart", "Best Buy", "Macy's", "Gap", "H&M"][index];
+
+          return (
+            <div key={index} className="d-flex align-items-center py-2 border-bottom">
+              <div
+                role="button"
+                onClick={() => toggleSelect(index)}
+                className={`d-flex align-items-center justify-content-center rounded-circle me-3 ${isSelected ? 'bg-primary text-white' : 'border border-secondary-subtle'}`}
+                style={{ width: '24px', height: '24px' }}
+              >
+                {isSelected && <Check size={14} />}
               </div>
+
+              <div className="d-flex align-items-center flex-grow-1">
+                <div className="rounded-circle bg-light me-3" style={{ width: '40px', height: '40px' }}></div>
+                <div>
+                  <p className="mb-0 fw-medium">{brand}</p>
+                  <p className="mb-0 small text-muted">Last email: 3 days ago</p>
+                </div>
+              </div>
+
+              <button className="btn btn-sm btn-light text-secondary">Weekly</button>
             </div>
-            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Weekly</button>
-          </div>
-        ))}
+          );
+        })}
       </div>
-      
+
       {selected.length > 0 && (
-        <div className="p-4 bg-white border-t border-gray-200">
-          <button 
+        <div className="p-3 border-top bg-white">
+          <button
             onClick={toUnsubscribeProcess}
-            className="w-full bg-blue-600 text-white font-medium py-3 rounded-xl"
+            className="btn btn-primary w-100 fw-medium py-2"
           >
             Unsubscribe ({selected.length})
           </button>
