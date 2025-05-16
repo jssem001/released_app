@@ -23,16 +23,18 @@ function getCategory(sub) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const subscriptions = useLocation().state || [];
+  // const subscriptions = useLocation().state || [];
+  const { state } = useLocation();
+  const subscriptions = state?.subscriptions || [];
 
   // Build a map: category -> [subs]
   const byCategory = useMemo(() => {
     const map = {
       'Shopping & Retail': [],
       'News & Publications': [],
-      Entertainment: [],
+      'Entertainment': [],
       'Social Media': [],
-      Miscellaneous: [],
+      'Miscellaneous': [],
     };
     subscriptions.forEach(sub => {
       const cat = getCategory(sub);
@@ -46,9 +48,18 @@ export default function Dashboard() {
   const unsubscribed = subscriptions.filter(s => s.unsubscribed).length;
 
   // Navigate to category view with only that category’s items
+  // const handleCategory = (category) => {
+  //   navigate('/category-view', { state: byCategory[category] });
+  // };
   const handleCategory = (category) => {
-    navigate('/category-view', { state: byCategory[category] });
+    navigate('/category-view', {
+      state: {
+        title: category,
+        subscriptions: byCategory[category]
+      }
+    });
   };
+  
 
   return (
     <div className="d-flex flex-column bg-white vh-100">

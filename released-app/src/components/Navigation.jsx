@@ -9,16 +9,16 @@ export function useAppNavigation() {
     toOnboarding: () => navigate('/'),
     toEmailLogin: () => navigate('/email-login'),
     toScanning: () => navigate('/scanning'),
-    // toDashboard: () => navigate('/dashboard'),
-    // toCategoryView: () => navigate('/category-view'),
     toDashboard:  (subscriptions = []) =>
-      navigate('/dashboard', { state: subscriptions }),
-    toCategoryView: (subscriptions = []) =>
-      navigate('/category-view', { state: subscriptions }),
+      navigate('/dashboard', { state: {subscriptions} }),
+    // toCategoryView: (subscriptions = []) =>
+    //   navigate('/category-view', { state: subscriptions }),
+    toCategoryView: ({ subscriptions = [], title = '' } = {}) =>
+      navigate('/category-view', { state: { subscriptions, title } }),
     toUnsubscribeProcess: () => navigate('/unsubscribe-process')
   };
 }
 
 export default function Navigation() {
-  return null; // This is just a placeholder component
+  return null; 
 }
