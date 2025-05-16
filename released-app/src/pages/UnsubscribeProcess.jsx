@@ -5,7 +5,8 @@ import { RefreshCw, Check, X } from "lucide-react";
 import { useAppNavigation } from "../components/Navigation";
 import { useLocation } from "react-router-dom";
 import { getAccessToken } from "../auth/gmailAuth";
-import { createUnsubscribeFilter } from "../services/gmailApi";
+import { createUnsubscribeFilter, listFilters } from "../services/gmailApi";
+
 
 export default function UnsubscribeProcess() {
   const { toDashboard } = useAppNavigation();
@@ -100,6 +101,14 @@ export default function UnsubscribeProcess() {
           });
         })
       );
+            // VERIFY: list the Gmail filters you just created
+      try {
+          const accessToken = await getAccessToken();
+          const filters = await listFilters(accessToken);
+          console.log("⚙️ Gmail filters now installed:", filters);
+        } catch (err) {
+          console.warn("Could not list filters:", err);
+        }
     }
 
     runAll();

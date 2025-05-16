@@ -82,3 +82,24 @@ export async function createUnsubscribeFilter(senderEmail, accessToken) {
   }
   return true;
 }
+
+export async function listFilters(accessToken) {
+  const res = await fetch(
+    `https://gmail.googleapis.com/gmail/v1/users/me/settings/filters`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  if (!res.ok) {
+    throw new Error(`Gmail listFilters error: ${(await res.text())}`);
+  }
+  let data;
+    try {
+      data = await res.json();
+    } catch {
+      return [];
+    }
+    return data.filter || [];
+}

@@ -3,7 +3,9 @@ import { ChevronRight } from 'lucide-react';
 import { useAppNavigation } from '../components/Navigation';
 import { useGmailAuth } from '../auth/gmailAuth';
 
+
 export default function EmailLogin() {
+  window.localStorage.removeItem('gmailAccessToken');
   const { toScanning } = useAppNavigation();
   const { signIn } = useGmailAuth();
 
