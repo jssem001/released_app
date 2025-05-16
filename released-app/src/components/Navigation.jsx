@@ -15,7 +15,9 @@ export function useAppNavigation() {
     //   navigate('/category-view', { state: subscriptions }),
     toCategoryView: ({ subscriptions = [], title = '' } = {}) =>
       navigate('/category-view', { state: { subscriptions, title } }),
-    toUnsubscribeProcess: () => navigate('/unsubscribe-process')
+    // toUnsubscribeProcess: () => navigate('/unsubscribe-process')
+    toUnsubscribeProcess: ({ subscriptions = [] } = {}) =>
+      navigate('/unsubscribe-process', { state: { subscriptions } }),
   };
 }
 
