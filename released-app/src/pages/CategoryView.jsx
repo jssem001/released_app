@@ -54,7 +54,6 @@ export default function CategoryView() {
           </div>
         </div>
 
-        {/* {subscriptions.map((sub, index) => { */}
         {uniqueSubscriptions.map((sub, index) => {
           const isSelected = selected.includes(sub.id);
           const { name, email } = parseSender(sub.from);
@@ -92,15 +91,8 @@ export default function CategoryView() {
 
       {selected.length > 0 && (
         <div className="p-3 border-top bg-white">
-          {/* <button
-            onClick={toUnsubscribeProcess}
-            className="btn btn-primary w-100 fw-medium py-2"
-          >
-            Unsubscribe ({selected.length})
-          </button> */}
             <button
               onClick={() => {
-                // grab the full sub objects for each selected id
                 const toUnsub = subscriptions.filter(sub => selected.includes(sub.id));
                 console.log("🚀 Navigating to unsubscribe with:", toUnsub);
                 toUnsubscribeProcess({ subscriptions: toUnsub });

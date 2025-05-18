@@ -23,7 +23,6 @@ function getCategory(sub) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  // const subscriptions = useLocation().state || [];
   const { state } = useLocation();
   const subscriptions = state?.subscriptions || [];
 
@@ -47,10 +46,6 @@ export default function Dashboard() {
   const total = subscriptions.length;
   const unsubscribed = subscriptions.filter(s => s.unsubscribed).length;
 
-  // Navigate to category view with only that category’s items
-  // const handleCategory = (category) => {
-  //   navigate('/category-view', { state: byCategory[category] });
-  // };
   const handleCategory = (category) => {
     navigate('/category-view', {
       state: {

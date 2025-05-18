@@ -11,8 +11,6 @@ const STORAGE_KEY = 'gmailAccessToken';
  */
 export function useGmailAuth() {
   const login = useGoogleLogin({
-    // scope: 'https://www.googleapis.com/auth/gmail.metadata',
-    // scope: 'https://www.googleapis.com/auth/gmail.readonly',
     scope: [
      'https://www.googleapis.com/auth/gmail.readonly',
      'https://www.googleapis.com/auth/gmail.settings.basic'

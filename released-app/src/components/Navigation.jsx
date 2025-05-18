@@ -11,11 +11,8 @@ export function useAppNavigation() {
     toScanning: () => navigate('/scanning'),
     toDashboard:  (subscriptions = []) =>
       navigate('/dashboard', { state: {subscriptions} }),
-    // toCategoryView: (subscriptions = []) =>
-    //   navigate('/category-view', { state: subscriptions }),
     toCategoryView: ({ subscriptions = [], title = '' } = {}) =>
       navigate('/category-view', { state: { subscriptions, title } }),
-    // toUnsubscribeProcess: () => navigate('/unsubscribe-process')
     toUnsubscribeProcess: ({ subscriptions = [] } = {}) =>
       navigate('/unsubscribe-process', { state: { subscriptions } }),
   };
