@@ -20,6 +20,7 @@ def google_auth():
 
     # Load environment variables
     GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+    print("🔐 Verifying with CLIENT ID:", GOOGLE_CLIENT_ID)
     JWT_SECRET = os.getenv('JWT_SECRET', 'devsecret')
 
     if not GOOGLE_CLIENT_ID:

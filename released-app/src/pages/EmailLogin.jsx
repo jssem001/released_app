@@ -1,24 +1,45 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useAppNavigation } from '../components/Navigation';
-import { useGmailAuth } from '../auth/gmailAuth';
-
+// import { useGmailAuth } from '../auth/gmailAuth';
+import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 export default function EmailLogin() {
-  window.localStorage.removeItem('gmailAccessToken');
   const { toScanning } = useAppNavigation();
-  const { signIn } = useGmailAuth();
 
-  const handleGmail = async () => {
+  const handleGoogleLogin = async (credentialResponse) => {
+    const idToken = credentialResponse.credential;
+    console.log("✅ Received ID Token:", idToken);
+
     try {
-      await signIn();
-      console.log("Navigating to scan");
+      const res = await axios.post('http://localhost:5000/auth/google', {
+        token: idToken
+      });
+      const jwt = res.data.token;
+      console.log("✅ Authenticated with backend. JWT:", jwt);
+      // Optionally store JWT for authenticated requests
+      localStorage.setItem('jwt', jwt);
       toScanning();
     } catch (err) {
-      console.error('Gmail sign-in error', err);
-      // TODO: show error toast to user
+      console.error("❌ Backend auth failed:", err);
     }
   };
+
+  // window.localStorage.removeItem('gmailAccessToken');
+  // const { toScanning } = useAppNavigation();
+  // const { signIn } = useGmailAuth();
+
+  // const handleGmail = async () => {
+  //   try {
+  //     await signIn();
+  //     console.log("Navigating to scan");
+  //     toScanning();
+  //   } catch (err) {
+  //     console.error('Gmail sign-in error', err);
+  //     // TODO: show error toast to user
+  //   }
+  // };
 
   return (
     <div className="h-100 d-flex flex-column bg-white p-4">
@@ -28,7 +49,15 @@ export default function EmailLogin() {
       </div>
 
       <div className="flex-grow-1">
-        <button 
+        <div className="mb-3">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => console.log("❌ Google login failed")}
+            size="large"
+            width="100%"
+          />
+        </div>
+        {/* <button 
           onClick={handleGmail}
           className="btn w-100 d-flex justify-content-between align-items-center border border-secondary-subtle bg-white rounded mb-3"
         >
@@ -37,7 +66,7 @@ export default function EmailLogin() {
             <span className="fw-medium">Gmail</span>
           </div>
           <ChevronRight size={20} className="text-secondary" />
-        </button>
+        </button> */}
 
         <button className="btn w-100 d-flex justify-content-between align-items-center border border-secondary-subtle bg-white rounded mb-3">
           <div className="d-flex align-items-center">

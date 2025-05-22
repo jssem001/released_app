@@ -3,6 +3,7 @@ from config import Config
 from .extensions import db, migrate
 from dotenv import load_dotenv
 import os
+from flask_cors import CORS
 
 # Load environment variables from .env
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -15,6 +16,8 @@ def create_app():
     # Init extensions
     db.init_app(app)
     migrate.init_app(app, db)
+
+    CORS(app)
 
     # Import models to register them
     from . import models
