@@ -1,70 +1,206 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 📨 Released Email App
 
-## Available Scripts
+A smart inbox manager that helps users identify and unsubscribe from unwanted email subscriptions, powered by Google OAuth, Gmail API, and intelligent filters.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📁 Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Screenshots](#screenshots)
+- [Setup Instructions](#setup-instructions)
+  - [Frontend](#frontend-setup)
+  - [Backend](#backend-setup)
+- [Google Cloud Setup](#google-cloud-setup)
+- [Environment Variables](#environment-variables)
+- [Authentication Flow](#authentication-flow)
+- [License](#license)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## ✅ Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 🔐 Google Sign-in with OAuth2
+- 📬 Read Gmail inbox with scoped permissions
+- 📄 Extract and analyze subscription emails
+- 🔕 Automatically unsubscribe or create Gmail filters
+- 📦 Persistent JWT session for backend communication
+- 🌐 Cross-Origin Resource Sharing (CORS) configured for local dev
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🧠 Architecture
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+Frontend (React) <--- Google ID Token / Access Token
+       |
+       v
+Backend (Flask + SQLAlchemy)
+       |
+       +-- Verifies Google ID token (user identity)
+       +-- Issues JWT token (for session auth)
+       |
+       +-- Communicates with Gmail APIs via Access Token
+       |
+       +-- Stores user metadata (email)
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🛠 Tech Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Layer       | Tech                     |
+|-------------|--------------------------|
+| Frontend    | React + Bootstrap        |
+| OAuth Login | @react-oauth/google      |
+| Backend     | Python Flask             |
+| DB          | SQLite (via SQLAlchemy)  |
+| Auth        | Google OAuth + JWT       |
+| APIs        | Gmail API v1             |
+| Hosting     | Localhost (dev)          |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🖼 Screenshots
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+| Email Login Page | Inbox Scanner | Unsubscribe Process |
+|------------------|----------------|----------------------|
+| ✅ Gmail Login    | 📬 Email List   | 🔕 Filtering/Unsub   |
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🚀 Setup Instructions
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 1. 📦 Clone the repo
 
-### Code Splitting
+```bash
+git clone https://github.com/your-username/released-app.git
+cd released-app
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+### 2. ⚛️ Frontend Setup (`/released-app`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+cd released-app
 
-### Making a Progressive Web App
+# Install dependencies
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Start development server
+npm start
+```
 
-### Advanced Configuration
+> Make sure you’ve added your `GOOGLE_CLIENT_ID` in the `<GoogleOAuthProvider>` wrapper.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### 3. 🐍 Backend Setup (`/backend`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+cd backend
 
-### `npm run build` fails to minify
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Install dependencies
+pip install -r requirements.txt
+
+# Run Flask server
+flask run
+```
+
+> Ensure `.env` is created in the `/backend` folder.
+
+---
+
+## ☁️ Google Cloud Setup
+
+1. Go to: [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project
+3. Go to **OAuth Consent Screen** > External > Add Scopes:
+   - `openid`
+   - `email`
+   - `profile`
+   - `https://www.googleapis.com/auth/gmail.readonly`
+   - `https://www.googleapis.com/auth/gmail.settings.basic`
+4. Create OAuth 2.0 credentials (Web Application)
+5. Add redirect URI: `http://localhost:3000`
+6. Save the `Client ID`
+
+---
+
+## ⚙️ Environment Variables
+
+### 📍 Frontend
+
+Located in `src/index.js`:
+
+```jsx
+<GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+```
+
+> Don't expose secret backend keys here — only public client ID.
+
+---
+
+### 📍 Backend (`/backend/.env`)
+
+```env
+SECRET_KEY=your-flask-secret
+JWT_SECRET=your-jwt-secret
+GOOGLE_CLIENT_ID=your-google-oauth-client-id
+DATABASE_URL=sqlite:///app.db
+```
+
+---
+
+## 🔐 Authentication Flow
+
+1. User clicks **"Sign in with Google"** in the frontend
+2. Google returns:
+   - `access_token` (used to access Gmail API)
+   - `id_token` (JWT from Google, proves identity)
+3. Frontend sends `id_token` to Flask backend
+4. Flask verifies the token with Google and issues **its own JWT** (`/auth/google`)
+5. JWT is stored in `localStorage` for session persistence
+6. Gmail `access_token` is also stored securely for API calls (in `localStorage`)
+7. Subsequent inbox scanning + unsubscribe actions are performed using that access token
+
+---
+
+## 🧪 Sample Usage
+
+```js
+// In frontend
+const idToken = credentialResponse.credential;
+const accessToken = credentialResponse.access_token;
+
+await axios.post('/auth/google', { id_token });
+
+// Save both
+localStorage.setItem('jwt', backendToken);
+localStorage.setItem('gmailAccessToken', accessToken);
+```
+
+---
+
+## 🧹 Cleanup & Todos
+
+- [ ] Improve error messages
+- [ ] Migrate from `localStorage` to `HttpOnly cookies` for tokens (production)
+- [ ] Add logout functionality
+- [ ] Add dashboard analytics
+- [ ] Deploy to Vercel/Render
+
+---
+
+## 📄 License
+
+MIT © 2025 Released Team  
+_“Making inboxes lighter, one unsubscribe at a time.”_
