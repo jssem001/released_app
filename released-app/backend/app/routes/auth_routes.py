@@ -2,8 +2,9 @@ from flask import Blueprint, request, jsonify
 import requests
 from app.models import User
 from app.extensions import db
-import jwt
-import datetime
+# import jwt
+# import datetime
+from flask_jwt_extended import create_access_token
 import os
 
 auth_bp = Blueprint('auth', __name__)
@@ -43,13 +44,16 @@ def google_auth():
             print(f"✅ User already exists: {email}")
 
         # Generate a JWT token for session management
-        payload = {
-            "user_id": user.id,
-            "email": user.email,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
-        }
+        # payload = {
+        #     "user_id": user.id,
+        #     "email": user.email,
+        #     "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        # }
 
-        jwt_token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+        # jwt_token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
+        # Generate a JWT token (with "sub" claim) for session management
+        jwt_token = create_access_token(identity=user.id)
 
         return jsonify({
             "token": jwt_token,
