@@ -13,7 +13,8 @@ class Subscription(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # 🔗 Foreign key: Links this subscription to a user account via user.id
 
-    from_name = db.Column(db.String(256))
+    # from_name = db.Column(db.String(256))
+    from_ = db.Column('from', db.String(255), nullable=True)
     # 🧾 The display name from the email sender, e.g., "Amazon News"
 
     from_email = db.Column(db.String(256))
@@ -25,7 +26,8 @@ class Subscription(db.Model):
     category = db.Column(db.String(100))
     # 🗂️ A tag or category label (e.g., "Shopping", "News", "Entertainment")
 
-    unsub_link = db.Column(db.Text)
+    # unsub_link = db.Column(db.Text)
+    unsubscribe_link = db.Column('unsubscribeLink', db.String(512), nullable=True)
     # 🔗 The unsubscribe URL extracted from headers or HTML content
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
