@@ -41,6 +41,9 @@ def create_app():
         # Register sub routes
         from .routes.sub_routes import subscription_bp
         app.register_blueprint(subscription_bp)
+        # Register unsubcribe routes
+        from .routes.unsubscribe_routes import unsubscribe_bp
+        app.register_blueprint(unsubscribe_bp)
 
     @app.route("/")
     def index():

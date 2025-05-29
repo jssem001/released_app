@@ -9,11 +9,13 @@ export default function EmailLogin() {
 
   const login = useGoogleLogin({
     flow: 'implicit',
+    prompt: 'consent',
     scope: [
       'openid',
       'email',
       'profile',
-      'https://www.googleapis.com/auth/gmail.readonly'
+      'https://www.googleapis.com/auth/gmail.readonly',
+      'https://www.googleapis.com/auth/gmail.settings.basic'
     ].join(' '),
     onSuccess: async tokenResponse => {
       const accessToken = tokenResponse.access_token;
