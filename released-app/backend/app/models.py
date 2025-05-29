@@ -8,29 +8,25 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Subscription(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(128), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # 🔗 Foreign key: Links this subscription to a user account via user.id
     from_ = db.Column('from', db.String(255), nullable=True)
-    # 🧾 The display name from the email sender, e.g., "Amazon News"
-    from_email = db.Column(db.String(256))
-    # 📧 The actual sender's email address, e.g., "news@amazon.com"
+    # from_email = db.Column(db.String(256))
     subject = db.Column(db.String(512))
-    # 📰 The subject line of the subscription email
-    category = db.Column(db.String(100))
-    # 🗂️ A tag or category label (e.g., "Shopping", "News", "Entertainment")
+    # category = db.Column(db.String(100))
     unsubscribe_link = db.Column('unsubscribeLink', db.String(512), nullable=True)
-    # 🔗 The unsubscribe URL extracted from headers or HTML content
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    # 🕓 Timestamp when this subscription record was saved to the database
     
     user = db.relationship("User", backref=db.backref("subscriptions", lazy=True))
-    # ↔️ Enables `user.subscriptions` access from User instances
 
 class UnsubscribeAction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'), nullable=False)
+    # subscription_id = db.Column(db.Integer, db.ForeignKey('subscription.id'), nullable=False)
+    subscription_id = db.Column(db.String(128), db.ForeignKey('subscription.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.String(32), nullable=False)  # e.g., 'pending', 'success', 'failed'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     subscription = db.relationship('Subscription', backref=db.backref('unsubscribe_actions', lazy=True), uselist=False)
+    user = db.relationship('User', backref=db.backref('unsubscribe_actions', lazy=True), uselist=False)

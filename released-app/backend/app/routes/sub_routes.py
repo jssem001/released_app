@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.models import Subscription
 from app.extensions import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy.exc import IntegrityError
 
 # subscription_bp = Blueprint('subscriptions', __name__)
 subscription_bp = Blueprint(
@@ -21,19 +22,31 @@ def bulk_create_subscriptions():
         return jsonify({"error": "Expected a list of subscriptions"}), 400
 
     subscriptions = []
+
+    existing_ids = {
+    s.id for s in Subscription.query.filter_by(user_id=user_id).all()
+    }
+
     for item in data:
+        if item['id'] in existing_ids:
+            continue
         subscriptions.append(Subscription(
+            id=item.get('id'),
             user_id=user_id,
             # from_name=item.get('from_name'),
             from_=item.get('from'),
-            from_email=item.get('from_email'),
+            # from_email=item.get('from_email'),
             subject=item.get('subject'),
-            category=item.get('category'),
+            # category=item.get('category'),
             # unsub_link=item.get('unsub_link')
             unsubscribe_link=item.get('unsubscribeLink')
         ))
 
-    db.session.bulk_save_objects(subscriptions)
-    db.session.commit()
+    try:
+        db.session.bulk_save_objects(subscriptions)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Duplicate subscription ID(s)"}), 409
 
     return jsonify({"message": f"{len(subscriptions)} subscriptions saved."}), 201
