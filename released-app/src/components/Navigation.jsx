@@ -5,16 +5,27 @@ import { useNavigate } from 'react-router-dom';
 export function useAppNavigation() {
   const navigate = useNavigate();
 
+  const sanitizeSubs = (subs) => {
+   if (!Array.isArray(subs)) return [];
+    return subs.map(s => ({
+      id: s.id,
+      from: s.from,
+      subject: s.subject,
+      unsubscribeLink: s.unsubscribeLink,
+      listUnsubscribeUrl: s.listUnsubscribeUrl || null,
+    }));
+  };
+
   return {
     toOnboarding: () => navigate('/'),
     toEmailLogin: () => navigate('/email-login'),
     toScanning: () => navigate('/scanning'),
     toDashboard:  (subscriptions = []) =>
-      navigate('/dashboard', { state: {subscriptions} }),
+      navigate('/dashboard', { state: { subscriptions: sanitizeSubs(subscriptions) } }),
     toCategoryView: ({ subscriptions = [], title = '' } = {}) =>
-      navigate('/category-view', { state: { subscriptions, title } }),
+      navigate('/category-view', { state: { subscriptions: sanitizeSubs(subscriptions), title } }),
     toUnsubscribeProcess: ({ subscriptions = [] } = {}) =>
-      navigate('/unsubscribe-process', { state: { subscriptions } }),
+      navigate('/unsubscribe-process', { state: { subscriptions: sanitizeSubs(subscriptions) } }),
   };
 }
 
