@@ -4,14 +4,13 @@ from app.extensions import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
 
-# subscription_bp = Blueprint('subscriptions', __name__)
 subscription_bp = Blueprint(
     'subscriptions',
     __name__,
     url_prefix='/subscriptions'
 )
 
-# @subscription_bp.route('/subscriptions/bulk', methods=['POST'])
+
 @subscription_bp.route('/bulk', methods=['POST'])
 @jwt_required()
 def bulk_create_subscriptions():
@@ -50,3 +49,32 @@ def bulk_create_subscriptions():
         return jsonify({"error": "Duplicate subscription ID(s)"}), 409
 
     return jsonify({"message": f"{len(subscriptions)} subscriptions saved."}), 201
+
+@subscription_bp.route('/<string:subscription_id>', methods=['DELETE'])
+@jwt_required()
+def delete_subscription(subscription_id):
+    user_id = get_jwt_identity()
+    sub = Subscription.query.filter_by(id=subscription_id, user_id=user_id).first()
+    if not sub:
+        return jsonify({"error": "Subscription not found"}), 404
+
+    db.session.delete(sub)
+    db.session.commit()
+    return jsonify({"message": f"Subscription {subscription_id} deleted."}), 200
+
+# @subscription_bp.route('/subscriptions/<string:subscription_id>', methods=['DELETE'])
+# @jwt_required()
+# def delete_subscription(subscription_id):
+#     """
+#     DELETE a single subscription by its string ID.
+#     """
+#     user_id = get_jwt_identity()
+#     try:
+#         # Fetch the subscription that belongs to this user
+#         sub = Subscription.query.filter_by(id=subscription_id, user_id=user_id).one()
+#     except NoResultFound:
+#         return jsonify({"error": "Subscription not found"}), 404
+
+#     db.session.delete(sub)
+#     db.session.commit()
+#     return jsonify({"message": f"Subscription {subscription_id} deleted."}), 200

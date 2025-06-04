@@ -85,6 +85,20 @@ export default function UnsubscribeProcess() {
             }
           }
 
+          // If *either* web‐GET/form succeeded OR fallback succeeded, let’s delete in our DB
+          if (success) {
+            try {
+              const jwt = localStorage.getItem("jwt");
+              await axios.delete(
+                `http://localhost:5000/subscriptions/${item.id}`,
+                { headers: { Authorization: `Bearer ${jwt}` } }
+              );
+              console.log(`🗑️ Deleted subscription ${item.id} from DB`);
+            } catch (deleteErr) {
+              console.warn(`Failed to delete subscription ${item.id}:`, deleteErr);
+            }
+          }
+
           if (!isMounted) return;
 
           setItems(prev => {

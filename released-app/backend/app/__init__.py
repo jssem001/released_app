@@ -27,7 +27,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    CORS(app)
+    CORS(app, supports_credentials=True)
 
     # Import models to register them
     from . import models
