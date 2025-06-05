@@ -10,6 +10,13 @@ subscription_bp = Blueprint(
     url_prefix='/subscriptions'
 )
 
+@subscription_bp.route('', methods=['GET'])
+@jwt_required()
+def list_subscriptions():
+    user_id = get_jwt_identity()
+    subs = Subscription.query.filter_by(user_id=user_id).all()
+    return jsonify([ sub.to_dict() for sub in subs ])
+
 
 @subscription_bp.route('/bulk', methods=['POST'])
 @jwt_required()
@@ -32,12 +39,8 @@ def bulk_create_subscriptions():
         subscriptions.append(Subscription(
             id=item.get('id'),
             user_id=user_id,
-            # from_name=item.get('from_name'),
             from_=item.get('from'),
-            # from_email=item.get('from_email'),
             subject=item.get('subject'),
-            # category=item.get('category'),
-            # unsub_link=item.get('unsub_link')
             unsubscribe_link=item.get('unsubscribeLink')
         ))
 
@@ -62,19 +65,3 @@ def delete_subscription(subscription_id):
     db.session.commit()
     return jsonify({"message": f"Subscription {subscription_id} deleted."}), 200
 
-# @subscription_bp.route('/subscriptions/<string:subscription_id>', methods=['DELETE'])
-# @jwt_required()
-# def delete_subscription(subscription_id):
-#     """
-#     DELETE a single subscription by its string ID.
-#     """
-#     user_id = get_jwt_identity()
-#     try:
-#         # Fetch the subscription that belongs to this user
-#         sub = Subscription.query.filter_by(id=subscription_id, user_id=user_id).one()
-#     except NoResultFound:
-#         return jsonify({"error": "Subscription not found"}), 404
-
-#     db.session.delete(sub)
-#     db.session.commit()
-#     return jsonify({"message": f"Subscription {subscription_id} deleted."}), 200

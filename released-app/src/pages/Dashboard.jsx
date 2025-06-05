@@ -1,30 +1,58 @@
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Trello, Settings, Award, BarChart2, ChevronRight } from 'lucide-react';
+import axios from 'axios';
 
 // Keyword-based classifier
 function getCategory(sub) {
   const text = `${sub.from} ${sub.subject}`.toLowerCase();
-  if (/\b(amazon|shop|retail|store|target|walmart|best buy|gap|hm)\b/.test(text)) {
+  if (/\b(amazon|shop|retail|store|claim|offer|buy|sale|hm)\b/.test(text)) {
     return 'Shopping & Retail';
   }
-  if (/\b(news|times|daily|press|journal|magazine)\b/.test(text)) {
+  if (/\b(news|times|daily|monthly|journal|magazine)\b/.test(text)) {
     return 'News & Publications';
   }
-  if (/\b(netflix|entertain|hulu|prime|spotify|movie|music)\b/.test(text)) {
+  if (/\b(netflix|entertain|experience|ticket|apple|movie|music)\b/.test(text)) {
     return 'Entertainment';
   }
-  if (/\b(facebook|twitter|instagram|linkedin|social|snapchat)\b/.test(text)) {
+  if (/\b(alerts|twitter|instagram|linkedin|social|snapchat)\b/.test(text)) {
     return 'Social Media';
   }
   return 'Miscellaneous';
 }
 
+// export default function Dashboard() {
+//   const navigate = useNavigate();
+//   const { state } = useLocation();
+//   const subscriptions = state?.subscriptions || [];
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const subscriptions = state?.subscriptions || [];
+
+  // ----------------------------
+  // STEP 1: local state to hold subscriptions from DB
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // STEP 2: fetch from backend on mount
+  useEffect(() => {
+    async function fetchSubscriptions() {
+      try {
+        const jwt = localStorage.getItem('jwt');
+        const resp = await axios.get('http://localhost:5000/subscriptions', {
+          headers: { Authorization: `Bearer ${jwt}` }
+        });
+        setSubscriptions(resp.data); // assume resp.data is an array of { id, from, subject, unsubscribeLink, category, ... }
+      } catch (err) {
+        console.error('⚠️ Failed to load subscriptions:', err);
+        setError('Could not load subscriptions');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSubscriptions();
+  }, []);
 
   // Build a map: category -> [subs]
   const byCategory = useMemo(() => {
