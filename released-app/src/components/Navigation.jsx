@@ -19,6 +19,7 @@ export function useAppNavigation() {
   return {
     toOnboarding: () => navigate('/'),
     toEmailLogin: () => navigate('/email-login'),
+    toSettings: () => navigate('/settings'),
     toScanning: () => navigate('/scanning'),
     toDashboard:  (subscriptions = []) =>
       navigate('/dashboard', { state: { subscriptions: sanitizeSubs(subscriptions) } }),

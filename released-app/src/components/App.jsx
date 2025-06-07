@@ -8,7 +8,8 @@ import EmailLogin from '../pages/EmailLogin';
 import Scanning from '../pages/Scanning';
 import Dashboard from '../pages/Dashboard';
 import CategoryView from '../pages/CategoryView';
-import UnsubscribeProcess from '../pages/UnsubscribeProcess'
+import UnsubscribeProcess from '../pages/UnsubscribeProcess';
+import SettingsPage from '../pages/SettingsPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="category-view" element={<CategoryView />} />
           <Route path="unsubscribe-process" element={<UnsubscribeProcess />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </Router>
