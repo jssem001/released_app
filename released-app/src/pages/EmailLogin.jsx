@@ -41,7 +41,7 @@ export default function EmailLogin() {
   return (
     <div className="h-100 d-flex flex-column bg-white p-4">
       <div className="mb-4">
-        <h2 className="fs-3 fw-bold text-dark">Connect your email</h2>
+        <h2 className="fs-3 fw-bold text-dark">Connect Your Email</h2>
         <p className="small text-muted">Choose your email provider to continue</p>
       </div>
 

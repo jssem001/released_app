@@ -35,10 +35,10 @@ export default function CategoryView() {
 
   return (
     <div className="h-100 d-flex flex-column bg-white">
-      <div className="p-3 bg-danger bg-opacity-10 border-bottom border-danger-subtle">
+      <div className="p-3 bg-success bg-opacity-50 border-bottom border-success">
         <div className="d-flex align-items-center mb-2">
-          <button onClick={toDashboard} className="btn btn-sm btn-light me-2">
-            <ArrowRight size={20} style={{ transform: 'rotate(180deg)' }} className="text-secondary" />
+          <button onClick={toDashboard} className="btn btn-sm btn-success btn-opacity me-2 border-success">
+            <ArrowRight size={20} style={{ transform: 'rotate(180deg)' }} className="" />
           </button>
           <h1 className="fs-6 fw-bold mb-0">{title}</h1>
         </div>
@@ -49,8 +49,8 @@ export default function CategoryView() {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <p className="small text-muted mb-0">{selected.length} selected</p>
           <div className="d-flex gap-2">
-            <button className="btn btn-sm btn-light text-muted">Sort</button>
-            <button className="btn btn-sm btn-light text-muted">Filter</button>
+            <button className="btn btn-sm btn-light border-secondary">Sort</button>
+            <button className="btn btn-sm btn-light border-secondary">Filter</button>
           </div>
         </div>
 

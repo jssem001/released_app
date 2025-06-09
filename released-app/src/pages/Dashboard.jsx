@@ -85,11 +85,11 @@ return (
       {/* <h1 className="fs-4 fw-bold mb-2">Released</h1> */}
       <div className="d-flex justify-content-between align-items-center px-2">
         <div>
-          <p className="small opacity-75 mb-1">Total subscriptions</p>
+          <p className="fw-bold small opacity-75 mb-1">Total Subscriptions</p>
           <p className="display-6 fw-bold mb-0">{total}</p>
         </div>
         <div className="text-end">
-          <p className="small opacity-75 mb-1">Unsubscribed</p>
+          <p className="fw-bold small opacity-75 mb-1">Unsubscribed</p>
           <p className="display-6 fw-bold mb-0">{unsubscribed}</p>
         </div>
       </div>
