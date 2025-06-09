@@ -81,7 +81,7 @@ export default function Dashboard() {
 return (
   <div className="d-flex flex-column vh-100 bg-white">
     {/* Header */}
-    <div className="p-2 bg-primary text-white flex-shrink-0">
+    <div className="px-2 py-2 bg-primary text-white flex-shrink-0">
       {/* <h1 className="fs-4 fw-bold mb-2">Released</h1> */}
       <div className="d-flex justify-content-between align-items-center px-2">
         <div>
@@ -134,21 +134,21 @@ return (
     style={{ zIndex: 1030 }}
   >
     <div className="d-flex justify-content-around py-2">
-      <button className="btn btn-link d-flex flex-column align-items-center text-primary">
+      <button className="btn d-flex flex-column align-items-center text-primary">
         <Trello size={20} />
         <span className="small mt-1">Home</span>
       </button>
-      <button className="btn btn-link d-flex flex-column align-items-center text-muted">
+      <button className="btn d-flex flex-column align-items-center text-muted">
         <BarChart2 size={20} />
         <span className="small mt-1">Stats</span>
       </button>
-      <button className="btn btn-link d-flex flex-column align-items-center text-muted">
+      <button className="btn d-flex flex-column align-items-center text-muted">
         <Award size={20} />
         <span className="small mt-1">Premium</span>
       </button>
       <button
         onClick={toSettings}
-        className="btn btn-link d-flex flex-column align-items-center text-muted"
+        className="btn d-flex flex-column align-items-center text-muted"
       >
         <Settings size={20} />
         <span className="small mt-1">Settings</span>
