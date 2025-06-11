@@ -28,10 +28,28 @@ export default function SettingsPage() {
       });
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('gmailAccessToken');
-    navigate('/');
+  // const handleLogout = () => {
+  //   localStorage.removeItem('jwt');
+  //   localStorage.removeItem('gmailAccessToken');
+  //   navigate('/');
+  // };
+  const handleDelete = async () => {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) return;
+    const confirmed = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
+    if (!confirmed) return;
+
+    try {
+      await axios.delete('http://localhost:5000/user/profile', {
+        headers: { Authorization: `Bearer ${jwt}` }
+      });
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('gmailAccessToken');
+      navigate('/');
+    } catch (err) {
+      console.error("❌ Failed to delete account:", err);
+      alert("Account deletion failed. Please try again.");
+    }
   };
 
   const toggleDarkMode = () => {
@@ -80,8 +98,8 @@ export default function SettingsPage() {
             <hr />
 
             <div>
-              <button onClick={handleLogout} className="btn btn-outline-danger fw-bold">
-                Log Out
+              <button onClick={handleDelete} className="btn btn-outline-danger fw-bold">
+                Delete Account
               </button>
             </div>
           </>

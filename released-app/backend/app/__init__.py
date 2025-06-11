@@ -28,7 +28,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # CORS(app, supports_credentials=True,origins=["http://localhost:3000"])
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True, methods=["GET", "POST", "DELETE", "OPTIONS", "PUT"])
 
 
     # Import models to register them
