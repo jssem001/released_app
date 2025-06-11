@@ -27,7 +27,9 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    CORS(app, supports_credentials=True,origins=["http://localhost:3000"])
+    # CORS(app, supports_credentials=True,origins=["http://localhost:3000"])
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+
 
     # Import models to register them
     from . import models
@@ -44,6 +46,9 @@ def create_app():
         # Register unsubcribe routes
         from .routes.unsubscribe_routes import unsubscribe_bp
         app.register_blueprint(unsubscribe_bp)
+        # Register user/profile routes
+        from .routes.user_routes import user_bp
+        app.register_blueprint(user_bp)
 
     @app.route("/")
     def index():
