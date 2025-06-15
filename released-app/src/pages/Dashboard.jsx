@@ -49,7 +49,17 @@ export default function Dashboard() {
     fetchSubscriptions();
   }, []);
 
-  // Build a map: category -> [subs]
+  const uniqueSubscriptions = useMemo(() => {
+    const seen = new Map();
+    subscriptions.forEach(s => {
+      // use the sender string as the key, not the message id
+      const key = s.from;  
+      if (!seen.has(key)) seen.set(key, s);
+    });
+    return Array.from(seen.values());
+  }, [subscriptions]);
+
+  // Then group into categories
   const byCategory = useMemo(() => {
     const map = {
       'Shopping & Retail': [],
@@ -58,16 +68,16 @@ export default function Dashboard() {
       'Social Media': [],
       'Miscellaneous': [],
     };
-    subscriptions.forEach(sub => {
+    uniqueSubscriptions.forEach(sub => {
       const cat = getCategory(sub);
       map[cat].push(sub);
     });
     return map;
-  }, [subscriptions]);
+  }, [uniqueSubscriptions]);
 
   // Total / unsubscribed
-  const total = subscriptions.length;
-  const unsubscribed = subscriptions.filter(s => s.unsubscribed).length;
+  const total = uniqueSubscriptions.length;
+  const unsubscribed = uniqueSubscriptions.filter(s => s.unsubscribed).length;
 
   const handleCategory = (category) => {
     navigate('/category-view', {

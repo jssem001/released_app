@@ -43,15 +43,26 @@ def bulk_create_subscriptions():
             subject=item.get('subject'),
             unsubscribe_link=item.get('unsubscribeLink')
         ))
-
+    saved = 0
     try:
+        # Attempt to bulk‐save all new subs
         db.session.bulk_save_objects(subscriptions)
         db.session.commit()
+        saved = len(subscriptions)
     except IntegrityError:
+        # Likely some duplicates slipped through: roll back and try one‐by‐one
         db.session.rollback()
-        return jsonify({"error": "Duplicate subscription ID(s)"}), 409
+        for sub in subscriptions:
+            try:
+                db.session.add(sub)
+                db.session.commit()
+                saved += 1
+            except IntegrityError:
+                db.session.rollback()  # skip the one that already exists
 
-    return jsonify({"message": f"{len(subscriptions)} subscriptions saved."}), 201
+    return jsonify({
+        "message": f"{saved} subscription{'s' if saved != 1 else ''} saved (duplicates skipped)."
+    }), 201
 
 @subscription_bp.route('/<string:subscription_id>', methods=['DELETE'])
 @jwt_required()
