@@ -6,7 +6,7 @@ import { useAppNavigation } from '../components/Navigation';
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { toSettings, toDashboard } = useAppNavigation();
+  const {toDashboard, toPremium, toStatistics } = useAppNavigation();
   const [user, setUser] = useState({ email: '', created_at: '' });
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -116,18 +116,19 @@ export default function SettingsPage() {
             <Trello size={20} />
             <span className="small mt-1">Home</span>
           </button>
-          <button className="btn d-flex flex-column align-items-center text-muted">
+          <button 
+          onClick={toStatistics}
+          className="btn d-flex flex-column align-items-center text-muted">
             <BarChart2 size={20} />
             <span className="small mt-1">Stats</span>
           </button>
-          <button className="btn d-flex flex-column align-items-center text-muted">
+          <button 
+          onClick={toPremium}
+          className="btn d-flex flex-column align-items-center text-muted">
             <Award size={20} />
             <span className="small mt-1">Premium</span>
           </button>
-          <button
-            onClick={toSettings}
-            className="btn d-flex flex-column align-items-center text-primary"
-          >
+          <button className="btn d-flex flex-column align-items-center text-primary">
             <Settings size={20} />
             <span className="small mt-1">Settings</span>
           </button>

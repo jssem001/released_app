@@ -25,7 +25,7 @@ function getCategory(sub) {
 
 
 export default function Dashboard() {
-  const {toSettings} = useAppNavigation();
+  const {toSettings, toPremium, toStatistics} = useAppNavigation();
   const navigate = useNavigate();
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -138,11 +138,15 @@ return (
         <Trello size={20} />
         <span className="small mt-1">Home</span>
       </button>
-      <button className="btn d-flex flex-column align-items-center text-muted">
+      <button 
+      onClick={toStatistics}
+      className="btn d-flex flex-column align-items-center text-muted">
         <BarChart2 size={20} />
         <span className="small mt-1">Stats</span>
       </button>
-      <button className="btn d-flex flex-column align-items-center text-muted">
+      <button 
+      onClick={toPremium}
+      className="btn d-flex flex-column align-items-center text-muted">
         <Award size={20} />
         <span className="small mt-1">Premium</span>
       </button>

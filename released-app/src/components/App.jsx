@@ -10,6 +10,8 @@ import Dashboard from '../pages/Dashboard';
 import CategoryView from '../pages/CategoryView';
 import UnsubscribeProcess from '../pages/UnsubscribeProcess';
 import SettingsPage from '../pages/SettingsPage';
+import PremiumPage from '../pages/PremiumPage';
+import StatisticsPage from '../pages/StatisticsPage';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="category-view" element={<CategoryView />} />
           <Route path="unsubscribe-process" element={<UnsubscribeProcess />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="premium" element={<PremiumPage />} />
+          <Route path="statistics" element={<StatisticsPage />} />
         </Route>
       </Routes>
     </Router>
