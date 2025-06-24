@@ -23,9 +23,31 @@ allprojects {
         mavenCentral()
     }
     tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        // options.release = 17
+      // enforce Java 17
+      sourceCompatibility = JavaVersion.VERSION_17
+      targetCompatibility = JavaVersion.VERSION_17
+      // remove any injected "--release" flag (e.g. "--release 21")
+      options.compilerArgs.removeAll { arg ->
+      arg.startsWith("--release")
+      }
+    }  
+    // tasks.withType(JavaCompile).configureEach {
+    //     sourceCompatibility = JavaVersion.VERSION_17
+    //     targetCompatibility = JavaVersion.VERSION_17
+    //     // options.release = 17
+    // }
+}
+
+subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('java')) {
+            compileJava {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+                // options.release = null // avoid the "invalid source release" error
+                options.compilerArgs.removeAll { arg -> arg.startsWith("--release") }
+            }
+        }
     }
 }
 

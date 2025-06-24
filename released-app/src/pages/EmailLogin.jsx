@@ -2,40 +2,97 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useAppNavigation } from '../components/Navigation';
 import { useGoogleLogin } from '@react-oauth/google';
+import { Capacitor } from '@capacitor/core';
+import { Browser } from '@capacitor/browser';
 import axios from 'axios';
 
 export default function EmailLogin() {
   const { toScanning } = useAppNavigation();
 
-  const login = useGoogleLogin({
-    flow: 'implicit',
-    prompt: 'consent',
-    scope: [
-      'openid',
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/gmail.readonly',
-      'https://www.googleapis.com/auth/gmail.settings.basic'
-    ].join(' '),
-    onSuccess: async tokenResponse => {
-      const accessToken = tokenResponse.access_token;
-      console.log("✅ Access Token:", accessToken);
+  // const isNative = Capacitor.getPlatform() !== 'web';
 
-      try {
-        const res = await axios.post('http://localhost:5000/auth/google', {
-          access_token: accessToken
-        });
-        const jwt = res.data.token;
-        console.log("✅ Authenticated with backend. JWT:", jwt);
-        localStorage.setItem('gmailAccessToken', accessToken);
-        localStorage.setItem('jwt', jwt);
-        toScanning();
-      } catch (err) {
-        console.error("❌ Backend auth failed:", err);
-      }
-    },
-    onError: err => console.error("❌ Google login failed:", err)
+  // const login = isNative
+  // ? async () => {
+  //     // Native mobile: open external browser
+  //     try {
+  //       await Browser.open({ url: 'http://localhost:5000/auth/google' });
+  //     } catch (err) {
+  //       console.error("❌ Error opening browser for mobile login:", err);
+  //     }
+  //   }
+  // : useGoogleLogin({
+  const googleLogin = useGoogleLogin({
+      flow: 'implicit',
+      prompt: 'consent',
+      scope: [
+        'openid',
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/gmail.settings.basic'
+      ].join(' '),
+      onSuccess: async tokenResponse => {
+        const accessToken = tokenResponse.access_token;
+        console.log("✅ Access Token:", accessToken);
+
+        try {
+          const res = await axios.post('http://localhost:5000/auth/google', {
+            access_token: accessToken
+          });
+          const jwt = res.data.token;
+          console.log("✅ Authenticated with backend. JWT:", jwt);
+          localStorage.setItem('gmailAccessToken', accessToken);
+          localStorage.setItem('jwt', jwt);
+          toScanning();
+        } catch (err) {
+          console.error("❌ Backend auth failed:", err);
+        }
+      },
+      onError: err => console.error("❌ Google login failed:", err)
   });
+
+  const login = async () => {
+    const isNative = Capacitor.getPlatform() !== 'web';
+    if (isNative) {
+      try {
+        await Browser.open({ url: 'http://localhost:5000/auth/google' });
+      } catch (err) {
+        console.error("❌ Error opening browser for mobile login:", err);
+      }
+    } else {
+      googleLogin(); // safe call now
+    }
+  };
+
+  // const login = useGoogleLogin({
+  //   flow: 'implicit',
+  //   prompt: 'consent',
+  //   scope: [
+  //     'openid',
+  //     'email',
+  //     'profile',
+  //     'https://www.googleapis.com/auth/gmail.readonly',
+  //     'https://www.googleapis.com/auth/gmail.settings.basic'
+  //   ].join(' '),
+  //   onSuccess: async tokenResponse => {
+  //     const accessToken = tokenResponse.access_token;
+  //     console.log("✅ Access Token:", accessToken);
+
+  //     try {
+  //       const res = await axios.post('http://localhost:5000/auth/google', {
+  //         access_token: accessToken
+  //       });
+  //       const jwt = res.data.token;
+  //       console.log("✅ Authenticated with backend. JWT:", jwt);
+  //       localStorage.setItem('gmailAccessToken', accessToken);
+  //       localStorage.setItem('jwt', jwt);
+  //       toScanning();
+  //     } catch (err) {
+  //       console.error("❌ Backend auth failed:", err);
+  //     }
+  //   },
+  //   onError: err => console.error("❌ Google login failed:", err)
+  // });
 
 
   return (
