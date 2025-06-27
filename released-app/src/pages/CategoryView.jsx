@@ -8,7 +8,7 @@ export default function CategoryView() {
   const location = useLocation();
   const { subscriptions = [], title = 'Category' } = location.state || {};
 
-  // Deduplicate based on `from` field
+
   const uniqueSubscriptions = useMemo(() => {
     const seen = new Set();
     return subscriptions.filter(sub => {
@@ -27,7 +27,7 @@ export default function CategoryView() {
     );
   };
 
-  // Split sender into name and email (helper function)
+
   const parseSender = (from) => {
     const match = from?.match(/^(.*?)\s*<(.+)>$/);
     return match ? { name: match[1].trim(), email: match[2].trim() } : { name: from, email: '' };

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Released</string>
+    <string name="title_activity_main">Released</string>
+    <string name="package_name">com.sesery.released</string>
+    <string name="custom_url_scheme">com.sesery.released</string>
+</resources>
